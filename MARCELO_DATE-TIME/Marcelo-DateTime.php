@@ -1,4 +1,86 @@
-<?php include 'includes/header.php'; ?>
+<?php
+    include 'includes/header.php';
+
+    $flights = [
+        // DOMESTIC
+        [
+            "flightNo" => "PR 101",
+            "airline" => "Philippine Airlines",
+            "from" => "MNL",
+            "to" => "CEB",
+            "originTZ" => "Asia/Manila",
+            "destTZ" => "Asia/Manila",
+            "dep" => "2026-01-23 08:30",
+            "duration" => 75,
+            "img" => "img/Cebu.jpg",
+            "type" => "Domestic"
+        ],
+        [
+            "flightNo" => "5J 214",
+            "airline" => "Cebu Pacific",
+            "from" => "MNL",
+            "to" => "DVO",
+            "originTZ" => "Asia/Manila",
+            "destTZ" => "Asia/Manila",
+            "dep" => "2026-01-23 10:00",
+            "duration" => 110,
+            "img" => "img/Manila.jpeg",
+            "type" => "Domestic"
+        ],
+        [
+            "flightNo" => "Z2 452",
+            "airline" => "Philippines AirAsia",
+            "from" => "CRK",
+            "to" => "PPS",
+            "originTZ" => "Asia/Manila",
+            "destTZ" => "Asia/Manila",
+            "dep" => "2026-01-23 16:20",
+            "duration" => 95,
+            "img" => "img/Palawan.jpg",
+            "type" => "Domestic"
+        ],
+
+        // INTERNATIONAL
+        [
+            "flightNo" => "JL 78",
+            "airline" => "Japan Airlines",
+            "from" => "MNL",
+            "to" => "NRT",
+            "originTZ" => "Asia/Manila",
+            "destTZ" => "Asia/Tokyo",
+            "dep" => "2026-01-23 13:15",
+            "duration" => 260,
+            "img" => "img/Japan.jpg",
+            "type" => "International"
+        ],
+        [
+            "flightNo" => "SQ 921",
+            "airline" => "Singapore Airlines",
+            "from" => "MNL",
+            "to" => "SIN",
+            "originTZ" => "Asia/Manila",
+            "destTZ" => "Asia/Singapore",
+            "dep" => "2026-01-23 15:40",
+            "duration" => 220,
+            "img" => "img/Singapore.webp",
+            "type" => "International"
+        ],
+        [
+            "flightNo" => "AF 209",
+            "airline" => "Air France",
+            "from" => "MNL",
+            "to" => "CDG",
+            "originTZ" => "Asia/Manila",
+            "destTZ" => "Europe/Paris",
+            "dep" => "2026-01-23 23:00",
+            "duration" => 820,
+            "img" => "img/France.webp",
+            "type" => "International"
+        ]
+    ];
+?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,112 +90,75 @@
     <link rel="stylesheet"href="css/styles.css" >
     <title>Flight Schedules</title>
 </head>
+
 <body>
-<div class="container">
-    <div class="section-title">Domestic Flights</div>
-    <div class="grid">
-        <div class="box">
-            <img src="img/Manila.jpeg">
-            <div class="location">Manila to Davao</div>
-            <div class="time"><?= date("h:i A"); ?></div>
-        </div>
+    <!-- DOMESTIC -->
+    <section class="flight-section">
+        <div class="section-title">Domestic Flights</div>
+            <div class="grid">
+                <?php foreach ($flights as $f): ?>
+                <?php if ($f["type"] === "Domestic"): ?>
 
-        <div class="box">
-            <img src="img/Dipolog.jpg">
-            <div class="location">Dipolog to IloIlo</div>
-            <div class="time"><?= date("h:i A"); ?></div>
-        </div>
+                <?php
+                    $departure = new DateTime($f["dep"], new DateTimeZone($f["originTZ"]));
+                    $arrival = clone $departure;
+                    $arrival->add(new DateInterval("PT{$f['duration']}M"));
+                    $duration = $departure->diff($arrival);
+                ?>
 
-        <div class="box">
-            <img src="img/Zamboanga.jpg">
-            <div class="location">Zampoanga to Tacloban</div>
-            <div class="time"><?= date("h:i A"); ?></div>
-        </div>
+                <div class="box">
+                    <img src="<?= $f['img']; ?>">
+                    <div class="location"><?= $f['from']; ?> → <?= $f['to']; ?></div>
+                    <div><?= $f['airline']; ?> (<?= $f['flightNo']; ?>)</div>
 
-        <div class="box">
-            <img src="img/Cagayan.jpg">
-            <div class="location">Cagayan to Catarman</div>
-            <div class="time"><?= date("h:i A"); ?></div>
-        </div>
-        
-        <div class="box">
-            <img src="img/Cebu.jpg">
-            <div class="location">Cebu to Clark</div>
-            <div class="time"><?= date("h:i A"); ?></div>
-        </div>
+                    <div class="time">
+                        Dep: <?= $departure->format("M d, h:i A"); ?><br>
+                        Arr: <?= $arrival->format("h:i A"); ?><br>
+                        Duration: <?= $duration->h; ?>h <?= $duration->i; ?>m<br>
+                        TZ: <?= $f['originTZ']; ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+    </section>
 
-        <div class="box">
-            <img src="img/Tagbilaran.jpg">
-            <div class="location">Tagbilaran to Cotabato</div>
-            <div class="time"><?= date("h:i A"); ?></div>
-        </div>
+    <section class="flight-section">
+        <!-- INTERNATIONAL -->
+        <div class="section-title">International Flights</div>
+            <div class="grid">
 
-        <div class="box">
-            <img src="img/Antique.jpg">
-            <div class="location">Antique to Kalibo</div>
-            <div class="time"><?= date("h:i A"); ?></div>
-        </div>
+            <?php foreach ($flights as $f): ?>
+            <?php if ($f["type"] === "International"): ?>
 
-        <div class="box">
-            <img src="img/Busuanga.webp">
-            <div class="location">Busuanga to Legazpi</div>
-            <div class="time"><?= date("h:i A"); ?></div>
-        </div>
-    </div>
+            <?php
+                $departure = new DateTime($f["dep"], new DateTimeZone($f["originTZ"]));
+                $arrival = clone $departure;
+                $arrival->add(new DateInterval("PT{$f['duration']}M"));
+                $arrival->setTimezone(new DateTimeZone($f["destTZ"]));
+                $duration = $departure->diff($arrival);
+            ?>
 
-    <div class="section-title">International Flights</div>
-    <div class="grid">
-        <div class="box">
-            <img src="img/Japan.jpg">
-            <div class="location">Japan</div>
-            <div class="time"><?= gmdate("h:i A", time()+9*3600); ?></div>
-        </div>
+            <div class="box">
+                <img src="<?= $f['img']; ?>">
+                <div class="location"><?= $f['from']; ?> → <?= $f['to']; ?></div>
+                <div><?= $f['airline']; ?> (<?= $f['flightNo']; ?>)</div>
 
-        <div class="box">
-            <img src="IMG/Greenland.avif">
-            <div class="location">Greenland</div>
-            <div class="time"><?= gmdate("h:i A", time()+10*3600); ?></div>
-        </div>
+                <div class="time">
+                    Dep: <?= $departure->format("M d, h:i A"); ?><br>
+                    Arr: <?= $arrival->format("M d, h:i A"); ?><br>
+                    Duration: <?= $duration->h; ?>h <?= $duration->i; ?>m<br>
+                    TZ: <?= $f['destTZ']; ?>
+                </div>
+            </div>
 
-        <div class="box">
-            <img src="img/Canada.webp">
-            <div class="location">Canada</div>
-            <div class="time"><?= gmdate("h:i A", time()-5*3600); ?></div>
+            <?php endif; ?>
+            <?php endforeach; ?>
         </div>
+    </section>
 
-        <div class="box">
-            <img src="img/England.jpg">
-            <div class="location">England</div>
-            <div class="time"><?php echo gmdate("h:i A", time()-8*3600); ?></div>
-        </div>
-        
-        <div class="box">
-            <img src="img/England.jpg">
-            <div class="location">China</div>
-            <div class="time"><?php echo gmdate("h:i A", time()-8*3600); ?></div>
-        </div>
-
-        <div class="box">
-            <img src="img/England.jpg">
-            <div class="location">Iceland]</div>
-            <div class="time"><?php echo gmdate("h:i A", time()-8*3600); ?></div>
-        </div>
-
-        <div class="box">
-            <img src="img/England.jpg">
-            <div class="location">Korea</div>
-            <div class="time"><?php echo gmdate("h:i A", time()-8*3600); ?></div>
-        </div>
-
-        <div class="box">
-            <img src="img/England.jpg">
-            <div class="location">England</div>
-            <div class="time"><?php echo gmdate("h:i A", time()-8*3600); ?></div>
-        </div>
-    </div>
-    
     <div class="section-title">World Time Zones</div>
-    <div class="grid">
+    <div class="world-grid">
         <div class="box">
             <div class="location">Tokyo, Japan</div>
             <div class="time"><?php $tokyo = new DateTime("now", new DateTimeZone("Asia/Tokyo")); echo $tokyo->format("h:i A") ?></div>
